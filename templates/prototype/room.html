@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hold'em HQ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="../../static/styles.css" rel="stylesheet">
+</head>
+<body>
+    <main class="table-wrap centerpiece">
+        <section class="table-cloth" aria-label="Poker table">
+            <div class="table-glow"></div>
+
+            <div class="cards" aria-hidden="true">
+                <div class="card-png c1">
+                    <div class="card-inner">
+                        <div class="card-front"></div>
+                        <div class="card-back"><img></div>
+                    </div>
+                </div>
+                <div class="card-png c2">
+                    <div class="card-inner">
+                        <div class="card-front"></div>
+                        <div class="card-back"><img></div>
+                    </div>
+                </div>
+                <div class="card-png c3">
+                    <div class="card-inner">
+                        <div class="card-front"></div>
+                        <div class="card-back"><img></div>
+                    </div>
+                </div>
+                <div class="card-png c4">
+                    <div class="card-inner">
+                        <div class="card-front"></div>
+                        <div class="card-back"><img></div>
+                    </div>
+                </div>
+                <div class="card-png c5">
+                    <div class="card-inner">
+                        <div class="card-front"></div>
+                        <div class="card-back"><img></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div id="seats"></div>
+    </main>
+    <script>
+        const seatsContainer = document.getElementById('seats');
+        const table = document.querySelector('.table-cloth');
+
+        function placeSlots(N) {
+            seatsContainer.innerHTML = '';
+
+            const rect = table.getBoundingClientRect();
+            const rx = rect.width / 2;
+            const ry = rect.height / 2;
+            const cx = rect.left + rx; // center X in viewport coords
+            const cy = rect.top + ry;  // center Y in viewport coords
+
+            // Translate viewport coords into seats container coords
+            const wrapRect = seatsContainer.getBoundingClientRect();
+            const offsetX = cx - wrapRect.left;
+            const offsetY = cy - wrapRect.top;
+
+            for (let i = 0; i < N; i++) {
+                const theta = (2 * Math.PI * i / N) + Math.PI / 2;
+                const x = offsetX + rx * Math.cos(theta);
+                const y = offsetY + ry * Math.sin(theta);
+
+                const seat = document.createElement("div");
+                seat.className = "seat";
+                seat.style.left = `${x}px`;
+                seat.style.top = `${y}px`;
+                seat.classList.add("facedown");
+
+                const badge = document.createElement("div");
+                badge.className = "seat-badge";
+
+                // --- Position circle ---
+                const pos = document.createElement("div");
+                pos.className = "seat-pos";
+                pos.innerText = ["SB","BB","UTG","HJ","CO","BTN"][i % 6]; // example rotation
+
+                // --- Player info ---
+                const info = document.createElement("div");
+                info.className = "seat-info";
+
+                const nameEl = document.createElement("div");
+                nameEl.className = "seat-name";
+                nameEl.innerText = `Player ${i+1}`;
+
+                const stackEl = document.createElement("div");
+                stackEl.className = "seat-stack";
+                stackEl.innerText = `45.94 BB`;
+
+                info.appendChild(nameEl);
+                info.appendChild(stackEl);
+
+                // --- Hand (two cards) ---
+                const hand = document.createElement("div");
+                hand.className = "seat-hand";
+
+                for (let j = 0; j < 2; j++) {
+                    const card = document.createElement("div");
+                    card.className = "seat-card";
+
+                    const inner = document.createElement("div");
+                    inner.className = "seat-card-inner";
+
+                    const front = document.createElement("div");
+                    front.className = "seat-card-front";
+                    const img = document.createElement("img");
+                    img.src = "../../static/cards/Kd.png"; // placeholder, update later
+                    front.appendChild(img);
+
+                    const back = document.createElement("div");
+                    back.className = "seat-card-back";
+
+                    inner.appendChild(front);
+                    inner.appendChild(back);
+                    card.appendChild(inner);
+
+                    hand.appendChild(card);
+                }
+
+                seat.appendChild(hand);
+
+                // assemble
+                badge.appendChild(pos);
+                badge.appendChild(info);
+                seat.appendChild(badge);
+
+                seatsContainer.appendChild(seat);
+            }
+        }
+
+        function setSeatHandState(index, state = "facedown") {
+            const seat = seatsContainer.children[index];
+            if (!seat) return;
+            seat.classList.toggle("faceup", state === "faceup");
+            seat.classList.toggle("facedown", state !== "faceup");
+        }
+
+        // Example: 6 seats
+        placeSlots(10);
+
+        // Recalculate on resize
+        window.addEventListener('resize', () => placeSlots(10));
+        setTimeout(() => setSeatHandState(0, "faceup"), 1200);
+
+    </script>
+</body>
+</html>

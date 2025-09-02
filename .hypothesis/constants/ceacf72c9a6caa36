@@ -1,0 +1,4 @@
+# file: /Users/ryanbaker/projects/holdemhq/src/core/cards.py
+# hypothesis_version: 6.139.2
+
+['23456789TJQKA', 'Card', 'shdc']
