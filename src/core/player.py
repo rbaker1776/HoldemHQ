@@ -2,7 +2,11 @@ from src.core.cards import Card
 
 
 class Player:
-    def __init__(self, player_id: int, name: str, chips: int) -> None:
+    DEFAULT_CHIP_STACK: int = 0
+
+    def __init__(
+        self, player_id: int, name: str, chips: int = DEFAULT_CHIP_STACK
+    ) -> None:
         assert chips >= 0, f"Invalid chip count: {chips}"
         assert len(name.strip()) > 0, "Player name cannot be empty"
 
@@ -101,7 +105,7 @@ class Player:
             status.append("SITTING OUT")
 
         status_str = f" ({', '.join(status)})" if status else ""
-        return f"{self.name}: ${self.chips}{status_str}"
+        return f"{self.name} ({self.chips}{status_str})"
 
     def __repr__(self) -> str:
         return f"Player(id={self.player_id}, name='{self.name}', chips={self.chips})"

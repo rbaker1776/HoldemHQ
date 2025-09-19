@@ -53,7 +53,7 @@ class Game:
 
         self.pot = 0
         self.current_bet = 0
-        self.dealer_psition = (self.dealer_position + 1) % len(self.players)
+        self.dealer_position = (self.dealer_position + 1) % len(self.players)
 
         self._post_blinds()
 
@@ -149,7 +149,7 @@ class Game:
         )
 
     def process_action(
-        self, player_idx: int, action: GameAction, amount: int = 0
+        self, player_idx: int, action: GameAction, amount: int = 0, is_bb: bool = False
     ) -> bool:
         assert player_idx == self.current_player, f"Not player {player_idx}'s turn"
         assert player_idx in self.get_active_players(), (
@@ -162,7 +162,7 @@ class Game:
             player.fold()
 
         elif action == GameAction.CHECK:
-            assert self.can_check(player_idx), "Cannot check"
+            assert self.can_check(player_idx) or is_bb, f"Cannot check: {player}"
             player.check()
 
         elif action == GameAction.CALL:
