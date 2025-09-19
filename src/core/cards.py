@@ -6,7 +6,7 @@ class Card:
     RANKS: str = "23456789TJQKA"
     SUITS: str = "shdc"
 
-    def __init__(self, rank: str, suit: str) -> None:
+    def __init__(self, rank: str = "", suit: str = "") -> None:
         assert rank in self.RANKS, f"Invalid rank: {rank}"
         assert suit in self.SUITS, f"Invalid suit: {suit}"
         self.rank: str = rank
