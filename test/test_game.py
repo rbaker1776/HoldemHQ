@@ -45,7 +45,6 @@ class TestGame:
         players = self.create_players(3)
         game = Game(players, 5, 10)
 
-        # Simulate some previous state
         game.board = [Card("A", "s")]
         game.phase = GamePhase.FLOP
         game.pot = 100
@@ -54,9 +53,9 @@ class TestGame:
 
         assert game.phase == GamePhase.PREFLOP
         assert len(game.board) == 0
-        assert game.pot == 15  # Should have blinds posted
-        assert game.current_bet == 10  # Big blind amount
-        assert game.dealer_position == 1  # Moved from 0
+        assert game.pot == 15
+        assert game.current_bet == 10
+        assert game.dealer_position == 1
 
     def test_blinds_posting_three_players(self) -> None:
         players = self.create_players(3)
@@ -65,10 +64,9 @@ class TestGame:
 
         game.start_new_hand()
 
-        # With 3 players: dealer=1, small=2, big=0
-        assert players[2].current_bet == 5  # Small blind
-        assert players[0].current_bet == 10  # Big blind
-        assert players[1].current_bet == 0  # No blind
+        assert players[2].current_bet == 5
+        assert players[0].current_bet == 10
+        assert players[1].current_bet == 0
         assert game.pot == 15
 
     def test_blinds_posting_heads_up(self) -> None:
@@ -78,9 +76,8 @@ class TestGame:
 
         game.start_new_hand()
 
-        # Heads up: dealer posts small blind
-        assert players[1].current_bet == 5  # Dealer = small blind
-        assert players[0].current_bet == 10  # Other = big blind
+        assert players[1].current_bet == 5
+        assert players[0].current_bet == 10
         assert game.pot == 15
 
     def test_deal_hole_cards(self) -> None:
@@ -92,8 +89,7 @@ class TestGame:
         for player in players:
             assert len(player.hole_cards) == 2
 
-        # Should have dealt 6 cards total
-        assert len(game.deck) == 46  # 52 - 6 dealt
+        assert len(game.deck) == 46
 
     def test_deal_hole_cards_wrong_phase(self) -> None:
         players = self.create_players(3)
@@ -111,7 +107,7 @@ class TestGame:
 
         assert game.phase == GamePhase.FLOP
         assert len(game.board) == 3
-        assert game.current_bet == 0  # Reset for new betting round
+        assert game.current_bet == 0
 
     def test_advance_phase_flop_to_turn(self) -> None:
         players = self.create_players(3)
@@ -176,11 +172,11 @@ class TestGame:
         assert game.can_check(0)
 
         game.current_bet = 10
-        assert not game.can_check(0)  # Cannot check with bet to call
+        assert not game.can_check(0)
 
         players[0].fold()
         game.current_bet = 0
-        assert not game.can_check(0)  # Folded player cannot check
+        assert not game.can_check(0)
 
     def test_can_call(self) -> None:
         players = self.create_players(3)
@@ -190,11 +186,11 @@ class TestGame:
         assert game.can_call(0)
 
         game.current_bet = 0
-        assert not game.can_call(0)  # No bet to call
+        assert not game.can_call(0)
 
         players[0].fold()
         game.current_bet = 10
-        assert not game.can_call(0)  # Folded player cannot call
+        assert not game.can_call(0)
 
     def test_can_bet(self) -> None:
         players = self.create_players(3)
@@ -204,11 +200,11 @@ class TestGame:
         assert game.can_bet(0)
 
         game.current_bet = 10
-        assert not game.can_bet(0)  # Cannot bet when there's a bet to call
+        assert not game.can_bet(0)
 
         players[0].chips = 0
         game.current_bet = 0
-        assert not game.can_bet(0)  # No chips to bet
+        assert not game.can_bet(0)
 
     def test_can_raise(self) -> None:
         players = self.create_players(3)
@@ -218,11 +214,11 @@ class TestGame:
         assert game.can_raise(0)
 
         game.current_bet = 0
-        assert not game.can_raise(0)  # No bet to raise
+        assert not game.can_raise(0)
 
         players[0].chips = 0
         game.current_bet = 10
-        assert not game.can_raise(0)  # No chips to raise
+        assert not game.can_raise(0)
 
     def test_process_action_fold(self) -> None:
         players = self.create_players(3)
@@ -326,11 +322,9 @@ class TestGame:
         players = self.create_players(2)
         game = Game(players, 5, 10)
 
-        # Give players hole cards
-        players[0].deal_hole_cards([Card("A", "s"), Card("A", "h")])  # Pocket aces
-        players[1].deal_hole_cards([Card("K", "s"), Card("K", "h")])  # Pocket kings
+        players[0].deal_hole_cards([Card("A", "s"), Card("A", "h")])
+        players[1].deal_hole_cards([Card("K", "s"), Card("K", "h")])
 
-        # Set community cards
         game.board = [
             Card("A", "d"),
             Card("K", "d"),
@@ -351,11 +345,9 @@ class TestGame:
         players = self.create_players(2)
         game = Game(players, 5, 10)
 
-        # Give players hole cards
         players[0].deal_hole_cards([Card("A", "s"), Card("A", "h")])
         players[1].deal_hole_cards([Card("K", "s"), Card("K", "h")])
 
-        # Set community cards for straight
         game.board = [
             Card("7", "d"),
             Card("J", "d"),
@@ -366,7 +358,7 @@ class TestGame:
 
         winners = game.determine_winner()
 
-        assert len(winners) == 2  # Both have same straight
+        assert len(winners) == 2
 
     def test_distribute_pot_single_winner(self) -> None:
         players = self.create_players(2)
@@ -375,8 +367,8 @@ class TestGame:
 
         game.distribute_pot([0])
 
-        assert players[0].chips == 1200  # 1000 + 200
-        assert players[1].chips == 1000  # Unchanged
+        assert players[0].chips == 1200
+        assert players[1].chips == 1000
         assert game.pot == 0
 
     def test_distribute_pot_multiple_winners(self) -> None:
@@ -386,22 +378,21 @@ class TestGame:
 
         game.distribute_pot([0, 1])
 
-        assert players[0].chips == 1100  # 1000 + 100
-        assert players[1].chips == 1100  # 1000 + 100
-        assert players[2].chips == 1000  # Unchanged
+        assert players[0].chips == 1100
+        assert players[1].chips == 1100
+        assert players[2].chips == 1000
         assert game.pot == 0
 
     def test_distribute_pot_with_remainder(self) -> None:
         players = self.create_players(3)
         game = Game(players, 5, 10)
-        game.pot = 101  # Odd amount
+        game.pot = 101
 
         game.distribute_pot([0, 1, 2])
 
-        # 101 / 3 = 33 each, remainder 2 goes to first winners
-        assert players[0].chips == 1034  # 1000 + 33 + 1
-        assert players[1].chips == 1034  # 1000 + 33 + 1
-        assert players[2].chips == 1033  # 1000 + 33
+        assert players[0].chips == 1034
+        assert players[1].chips == 1034
+        assert players[2].chips == 1033
         assert game.pot == 0
 
     def test_is_betting_round_complete_all_folded_but_one(self) -> None:
@@ -423,7 +414,7 @@ class TestGame:
     def test_is_betting_round_complete_not_everyone_acted(self) -> None:
         players = self.create_players(3)
         game = Game(players, 5, 10)
-        game.players_acted = {0, 1}  # Player 2 hasn't acted
+        game.players_acted = {0, 1}
 
         assert not game.is_betting_round_complete()
 
@@ -441,7 +432,7 @@ class TestGame:
         game = Game(players, 5, 10)
         game.players_acted = {0, 1, 2}
         game.last_raiser = 1
-        game.current_player = 2  # Action hasn't returned to raiser
+        game.current_player = 2
 
         assert not game.is_betting_round_complete()
 
@@ -461,27 +452,27 @@ class TestGame:
 
     def test_all_in_affects_current_bet(self) -> None:
         players = self.create_players(2)
-        players[0].chips = 150  # Less than others
+        players[0].chips = 150
         game = Game(players, 5, 10)
         game.current_bet = 100
         game.current_player = 0
 
         game.process_action(0, GameAction.ALL_IN)
 
-        assert game.current_bet == 150  # All-in amount becomes new bet
+        assert game.current_bet == 150
         assert game.last_raiser == 0
 
     def test_all_in_doesnt_affect_current_bet(self) -> None:
         players = self.create_players(2)
-        players[0].chips = 50  # Less than current bet
+        players[0].chips = 50
         game = Game(players, 5, 10)
         game.current_bet = 100
         game.current_player = 0
 
         game.process_action(0, GameAction.ALL_IN)
 
-        assert game.current_bet == 100  # Unchanged
-        assert game.last_raiser is None  # No raise
+        assert game.current_bet == 100
+        assert game.last_raiser is None
 
     def test_player_sitting_out_not_active(self) -> None:
         players = self.create_players(3)
@@ -497,13 +488,12 @@ class TestGame:
         game = Game(players, 5, 10)
         game.current_player = 0
 
-        # Fold players 1 and 2
         players[1].fold()
         players[2].fold()
 
         game._advance_to_next_active_player()
 
-        assert game.current_player == 3  # Skipped folded players
+        assert game.current_player == 3
 
     def test_game_repr(self) -> None:
         players = self.create_players(3)
@@ -530,7 +520,7 @@ class TestGame:
         assert game.dealer_position == 2
 
         game.start_new_hand()
-        assert game.dealer_position == 0  # Wraps around
+        assert game.dealer_position == 0
 
     def test_deck_burn_cards(self) -> None:
         players = self.create_players(2)
@@ -538,18 +528,14 @@ class TestGame:
 
         initial_deck_size = len(game.deck)
 
-        # Deal hole cards (4 cards)
         game.deal_hole_cards()
         assert len(game.deck) == initial_deck_size - 4
 
-        # Advance to flop (1 burn + 3 flop = 4 cards)
         game.advance_phase()
         assert len(game.deck) == initial_deck_size - 8
 
-        # Advance to turn (1 burn + 1 turn = 2 cards)
         game.advance_phase()
         assert len(game.deck) == initial_deck_size - 10
 
-        # Advance to river (1 burn + 1 river = 2 cards)
         game.advance_phase()
         assert len(game.deck) == initial_deck_size - 12
