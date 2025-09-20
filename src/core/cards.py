@@ -18,27 +18,24 @@ class Card:
         assert self.rank in self.RANKS, f"Invalid rank: {self.rank}"
         assert self.suit in self.SUITS, f"Invalid suit: {self.suit}"
 
+    def value(self) -> int:
+        return self.RANKS.index(self.rank)
+
     def __str__(self) -> str:
         return f"{self.rank}{self.suit}"
 
     def __repr__(self) -> str:
         return f"Card('{self.rank}{self.suit}')"
 
-    def __abs__(self) -> int:
-        return self.RANKS.index(self.rank)
-
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Card):
             return NotImplemented
-        return self.rank == other.rank
+        return self.value() == other.value()
 
     def __lt__(self, other: "Card") -> bool:
         if not isinstance(other, Card):
             return NotImplemented
-        return self.__abs__() < other.__abs__()
-
-    def __hash__(self) -> int:
-        return hash(self.rank)
+        return self.value() < other.value()
 
 
 class Deck:

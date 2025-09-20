@@ -9,7 +9,7 @@ def evaluate_hand(hand: list[Card]) -> int:
     )
 
     sorted_cards = sorted(hand, reverse=True)
-    ranks = [abs(card) for card in sorted_cards]
+    ranks = [card.value() for card in sorted_cards]
     suits = [card.suit for card in sorted_cards]
 
     rank_counts = Counter(ranks)
@@ -118,7 +118,7 @@ def get_hand_description(hand: list[Card]) -> str:
         return "Invalid hand"
 
     sorted_cards = sorted(hand, reverse=True)
-    ranks = [abs(card) for card in sorted_cards]
+    ranks = [card.value() for card in sorted_cards]
     suits = [card.suit for card in sorted_cards]
 
     rank_counts = Counter(ranks)

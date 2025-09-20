@@ -33,14 +33,14 @@ class TestCard:
         card = Card("Qd")
         assert repr(card) == "Card('Qd')"
 
-    def test_card_abs_rank_value(self) -> None:
-        assert abs(Card("2s")) == 0
-        assert abs(Card("3s")) == 1
-        assert abs(Card("Ts")) == 8
-        assert abs(Card("Js")) == 9
-        assert abs(Card("Qs")) == 10
-        assert abs(Card("Ks")) == 11
-        assert abs(Card("As")) == 12
+    def test_card_value(self) -> None:
+        assert Card("2s").value() == 0
+        assert Card("3s").value() == 1
+        assert Card("Ts").value() == 8
+        assert Card("Js").value() == 9
+        assert Card("Qs").value() == 10
+        assert Card("Ks").value() == 11
+        assert Card("As").value() == 12
 
     def test_card_equality(self) -> None:
         assert Card("As") == Card("Ah")
@@ -64,15 +64,6 @@ class TestCard:
         card = Card("As")
         with pytest.raises(TypeError):
             card < "As"  # type: ignore[operator]
-
-    def test_card_hash(self) -> None:
-        assert hash(Card("As")) == hash(Card("Ah"))
-        assert hash(Card("Kd")) == hash(Card("Kc"))
-        for rank1 in Card.RANKS:
-            for rank2 in Card.RANKS:
-                assert (hash(Card(f"{rank1}s")) == hash(Card(f"{rank2}h"))) == (
-                    rank1 == rank2
-                )
 
     def test_card_sorting(self) -> None:
         cards = [Card("Ks"), Card("2h"), Card("Ad"), Card("Tc")]
