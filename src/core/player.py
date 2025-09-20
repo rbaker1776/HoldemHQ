@@ -23,11 +23,9 @@ class Player:
     def deal_hole_cards(self, cards: list[Card]) -> None:
         assert len(cards) == 2, f"Must deal exactly 2 cards, got {len(cards)}"
         self.hole_cards = Hand(cards)
-    
+
     def get_full_hand(self, board: Hand) -> Hand:
-        """Combine hole cards with board cards to get full 7-card hand."""
-        full_hand = self.hole_cards.copy()
-        full_hand.extend(board.to_list())
+        full_hand = self.hole_cards + board
         return full_hand
 
     def bet(self, amount: int) -> int:

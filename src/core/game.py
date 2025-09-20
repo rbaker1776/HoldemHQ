@@ -1,6 +1,6 @@
 from enum import Enum, auto
 from typing import Optional
-from src.core.cards import Card, Deck
+from src.core.cards import Card, Deck, Hand
 from src.core.player import Player
 from src.core.evaluator import evaluate_hand
 
@@ -211,7 +211,7 @@ class Game:
             if player.is_active() and len(player.hole_cards) == 2:
                 full_hand: Hand = player.hole_cards.copy()
                 full_hand.extend(self.board)
-                score = evaluate_hand(full_hand)
+                score = evaluate_hand(full_hand.cards)
                 results.append((i, score))
 
         return results

@@ -51,20 +51,20 @@ class TestPlayer:
 
         with pytest.raises(AssertionError, match="Must deal exactly 2 cards"):
             player.deal_hole_cards([Card("As"), Card("Kh"), Card("Qd")])
-    
+
     def test_get_full_hand(self) -> None:
         """Test combining hole cards with board cards."""
         from src.core.cards import Hand
-        
+
         player = Player(1, "Alice")
         player.deal_hole_cards([Card("As"), Card("Kh")])
-        
+
         board = Hand([Card("Qd"), Card("Jc"), Card("Ts")])
         full_hand = player.get_full_hand(board)
-        
+
         assert len(full_hand) == 5
         assert isinstance(full_hand, Hand)
-        
+
         # Should contain both hole cards and board cards
         full_hand_str = str(full_hand)
         assert "As" in full_hand_str
