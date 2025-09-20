@@ -1,4 +1,4 @@
-from src.core.cards import Card
+from src.core.cards import Card, Hand
 
 
 class Player:
@@ -13,7 +13,7 @@ class Player:
         self.player_id: int = player_id
         self.name: str = name.strip()
         self.chips: int = chips
-        self.hole_cards: list[Card] = []
+        self.hole_cards: Hand = Hand()
         self.current_bet: int = 0
         self.total_bet_this_hand: int = 0
         self.is_all_in: bool = False
@@ -22,7 +22,13 @@ class Player:
 
     def deal_hole_cards(self, cards: list[Card]) -> None:
         assert len(cards) == 2, f"Must deal exactly 2 cards, got {len(cards)}"
-        self.hole_cards = cards.copy()
+        self.hole_cards = Hand(cards)
+    
+    def get_full_hand(self, board: Hand) -> Hand:
+        """Combine hole cards with board cards to get full 7-card hand."""
+        full_hand = self.hole_cards.copy()
+        full_hand.extend(board.to_list())
+        return full_hand
 
     def bet(self, amount: int) -> int:
         assert amount > 0, f"Bet amount must be positive: {amount}"
@@ -74,7 +80,7 @@ class Player:
         self.chips += amount
 
     def reset(self) -> None:
-        self.hole_cards.clear()
+        self.hole_cards.reset()
         self.current_bet = 0
         self.total_bet_this_hand = 0
         self.is_all_in = False

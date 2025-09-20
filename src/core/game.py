@@ -209,7 +209,8 @@ class Game:
         results = []
         for i, player in enumerate(self.players):
             if player.is_active() and len(player.hole_cards) == 2:
-                full_hand = player.hole_cards + self.board
+                full_hand: Hand = player.hole_cards.copy()
+                full_hand.extend(self.board)
                 score = evaluate_hand(full_hand)
                 results.append((i, score))
 

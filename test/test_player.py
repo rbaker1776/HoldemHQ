@@ -1,5 +1,5 @@
 import pytest
-from src.core.cards import Card
+from src.core.cards import Card, Hand
 from src.core.player import Player
 
 
@@ -10,7 +10,7 @@ class TestPlayer:
         assert player.player_id == 1
         assert player.name == "Alice"
         assert player.chips == 1000
-        assert player.hole_cards == []
+        assert len(player.hole_cards) == 0
         assert player.current_bet == 0
         assert player.total_bet_this_hand == 0
         assert not player.is_all_in
@@ -41,6 +41,7 @@ class TestPlayer:
         assert len(player.hole_cards) == 2
         assert player.hole_cards[0].rank == "A"
         assert player.hole_cards[1].rank == "K"
+        assert isinstance(player.hole_cards, Hand)
 
     def test_deal_hole_cards_invalid_count(self) -> None:
         player = Player(1, "Alice")
@@ -50,6 +51,27 @@ class TestPlayer:
 
         with pytest.raises(AssertionError, match="Must deal exactly 2 cards"):
             player.deal_hole_cards([Card("As"), Card("Kh"), Card("Qd")])
+    
+    def test_get_full_hand(self) -> None:
+        """Test combining hole cards with board cards."""
+        from src.core.cards import Hand
+        
+        player = Player(1, "Alice")
+        player.deal_hole_cards([Card("As"), Card("Kh")])
+        
+        board = Hand([Card("Qd"), Card("Jc"), Card("Ts")])
+        full_hand = player.get_full_hand(board)
+        
+        assert len(full_hand) == 5
+        assert isinstance(full_hand, Hand)
+        
+        # Should contain both hole cards and board cards
+        full_hand_str = str(full_hand)
+        assert "As" in full_hand_str
+        assert "Kh" in full_hand_str
+        assert "Qd" in full_hand_str
+        assert "Jc" in full_hand_str
+        assert "Ts" in full_hand_str
 
     def test_bet_normal(self) -> None:
         """Test normal betting."""
@@ -253,7 +275,7 @@ class TestPlayer:
 
         player.reset()
 
-        assert player.hole_cards == []
+        assert len(player.hole_cards) == 0
         assert player.current_bet == 0
         assert player.total_bet_this_hand == 0
         assert not player.is_all_in
