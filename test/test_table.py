@@ -482,7 +482,7 @@ class TestPokerTable:
         table = PokerTable("TEST")
         player = Player(99, "Alice", 1500)
         player.current_bet = 50
-        player.deal_hole_cards([Card("A", "s"), Card("K", "h")])
+        player.deal_hole_cards([Card("As"), Card("Kh")])
 
         table.add_player(player, seat=3)
         table.dealer_seat = 3

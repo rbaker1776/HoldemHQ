@@ -3,73 +3,91 @@ from src.core.cards import Card, Deck, Hand
 
 
 class TestCard:
-    def test_card_creation_valid(self) -> None:
+    def test_card_creation_valid_old_format(self) -> None:
         card = Card("A", "s")
+        assert card.rank == "A"
+        assert card.suit == "s"
+
+    def test_card_creation_valid_new_format(self) -> None:
+        card = Card("As")
         assert card.rank == "A"
         assert card.suit == "s"
 
     def test_card_creation_invalid_rank(self) -> None:
         with pytest.raises(AssertionError, match="Invalid rank: X"):
             Card("X", "s")
+        with pytest.raises(AssertionError, match="Invalid rank: X"):
+            Card("Xs")
 
     def test_card_creation_invalid_suit(self) -> None:
         with pytest.raises(AssertionError, match="Invalid suit: x"):
             Card("A", "x")
+        with pytest.raises(AssertionError, match="Invalid suit: x"):
+            Card("Ax")
 
     def test_card_str_representation(self) -> None:
-        card = Card("K", "h")
+        card = Card("Kh")
         assert str(card) == "Kh"
 
     def test_card_repr_representation(self) -> None:
-        card = Card("Q", "d")
-        assert repr(card) == "Card('Q', 'd')"
+        card = Card("Qd")
+        assert repr(card) == "Card('Qd')"
 
     def test_card_abs_rank_value(self) -> None:
-        assert abs(Card("2", "s")) == 0
-        assert abs(Card("3", "s")) == 1
-        assert abs(Card("T", "s")) == 8
-        assert abs(Card("J", "s")) == 9
-        assert abs(Card("Q", "s")) == 10
-        assert abs(Card("K", "s")) == 11
-        assert abs(Card("A", "s")) == 12
+        assert abs(Card("2s")) == 0
+        assert abs(Card("3s")) == 1
+        assert abs(Card("Ts")) == 8
+        assert abs(Card("Js")) == 9
+        assert abs(Card("Qs")) == 10
+        assert abs(Card("Ks")) == 11
+        assert abs(Card("As")) == 12
 
     def test_card_equality(self) -> None:
-        assert Card("A", "s") == Card("A", "h")
-        assert Card("K", "d") == Card("K", "c")
-        assert Card("A", "s") != Card("K", "s")
+        assert Card("As") == Card("Ah")
+        assert Card("Kd") == Card("Kc")
+        assert Card("As") != Card("Ks")
 
     def test_card_equality_with_non_card(self) -> None:
-        card = Card("A", "s")
-        assert card != "A", "s"
+        card = Card("As")
+        assert card != "As"
         assert card != 12
         assert card != None
 
     def test_card_less_than(self) -> None:
-        assert Card("2", "s") < Card("3", "h")
-        assert Card("T", "d") < Card("J", "c")
-        assert Card("Q", "s") < Card("K", "h")
-        assert Card("K", "d") < Card("A", "c")
-        assert not Card("A", "s") < Card("K", "h")
+        assert Card("2s") < Card("3h")
+        assert Card("Td") < Card("Jc")
+        assert Card("Qs") < Card("Kh")
+        assert Card("Kd") < Card("Ac")
+        assert not Card("As") < Card("Kh")
 
     def test_card_less_than_with_non_card(self) -> None:
-        card = Card("A", "s")
+        card = Card("As")
         with pytest.raises(TypeError):
-            card < "A", "s"  # type: ignore[operator]
+            card < "As"  # type: ignore[operator]
 
     def test_card_hash(self) -> None:
-        assert hash(Card("A", "s")) == hash(Card("A", "h"))
-        assert hash(Card("K", "d")) == hash(Card("K", "c"))
+        assert hash(Card("As")) == hash(Card("Ah"))
+        assert hash(Card("Kd")) == hash(Card("Kc"))
         for rank1 in Card.RANKS:
             for rank2 in Card.RANKS:
-                assert (hash(Card(rank1, "s")) == hash(Card(rank2, "h"))) == (
+                assert (hash(Card(f"{rank1}s")) == hash(Card(f"{rank2}h"))) == (
                     rank1 == rank2
                 )
 
     def test_card_sorting(self) -> None:
-        cards = [Card("K", "s"), Card("2", "h"), Card("A", "d"), Card("T", "c")]
+        cards = [Card("Ks"), Card("2h"), Card("Ad"), Card("Tc")]
         sorted_cards = sorted(cards)
         expected_ranks = ["2", "T", "K", "A"]
         assert [card.rank for card in sorted_cards] == expected_ranks
+
+    def test_both_formats_equivalent(self) -> None:
+        # Test that both formats create equivalent cards
+        old_format = Card("A", "s")
+        new_format = Card("As")
+        assert old_format.rank == new_format.rank
+        assert old_format.suit == new_format.suit
+        assert str(old_format) == str(new_format)
+        assert old_format == new_format
 
 
 class TestDeck:
@@ -179,8 +197,8 @@ class TestHand:
 
     def test_hand_append_card(self) -> None:
         hand = Hand()
-        card1 = Card("A", "s")
-        card2 = Card("K", "h")
+        card1 = Card("As")
+        card2 = Card("Kh")
 
         hand.append(card1)
         assert len(hand) == 1
@@ -193,8 +211,8 @@ class TestHand:
 
     def test_hand_reset(self) -> None:
         hand = Hand()
-        hand.append(Card("A", "s"))
-        hand.append(Card("K", "h"))
+        hand.append(Card("As"))
+        hand.append(Card("Kh"))
         assert len(hand) == 2
 
         hand.reset()
@@ -206,10 +224,10 @@ class TestHand:
         hand = Hand()
         assert repr(hand) == "Hand(0 cards)"
 
-        hand.append(Card("A", "s"))
+        hand.append(Card("As"))
         assert repr(hand) == "Hand(1 cards)"
 
-        hand.append(Card("K", "h"))
+        hand.append(Card("Kh"))
         assert repr(hand) == "Hand(2 cards)"
 
 

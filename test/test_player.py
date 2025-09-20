@@ -34,7 +34,7 @@ class TestPlayer:
 
     def test_deal_hole_cards(self) -> None:
         player = Player(1, "Alice")
-        cards = [Card("A", "s"), Card("K", "h")]
+        cards = [Card("As"), Card("Kh")]
 
         player.deal_hole_cards(cards)
 
@@ -46,10 +46,10 @@ class TestPlayer:
         player = Player(1, "Alice")
 
         with pytest.raises(AssertionError, match="Must deal exactly 2 cards"):
-            player.deal_hole_cards([Card("A", "s")])
+            player.deal_hole_cards([Card("As")])
 
         with pytest.raises(AssertionError, match="Must deal exactly 2 cards"):
-            player.deal_hole_cards([Card("A", "s"), Card("K", "h"), Card("Q", "d")])
+            player.deal_hole_cards([Card("As"), Card("Kh"), Card("Qd")])
 
     def test_bet_normal(self) -> None:
         """Test normal betting."""
@@ -247,7 +247,7 @@ class TestPlayer:
     def test_reset(self) -> None:
         """Test resetting for new hand."""
         player = Player(1, "Alice", 1000)
-        player.deal_hole_cards([Card("A", "s"), Card("K", "h")])
+        player.deal_hole_cards([Card("As"), Card("Kh")])
         player.bet(100)
         player.fold()
 

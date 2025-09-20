@@ -7,16 +7,22 @@ class Card:
     SUITS: str = "shdc"
 
     def __init__(self, rank: str = "", suit: str = "") -> None:
-        assert rank in self.RANKS, f"Invalid rank: {rank}"
-        assert suit in self.SUITS, f"Invalid suit: {suit}"
-        self.rank: str = rank
-        self.suit: str = suit
+        # Support both Card("Q", "d") and Card("Qd") formats
+        if suit == "" and len(rank) == 2:  # Parse "Qd" format
+            self.rank = rank[0]
+            self.suit = rank[1]
+        else:  # Use separate rank and suit
+            self.rank = rank
+            self.suit = suit
+
+        assert self.rank in self.RANKS, f"Invalid rank: {self.rank}"
+        assert self.suit in self.SUITS, f"Invalid suit: {self.suit}"
 
     def __str__(self) -> str:
         return f"{self.rank}{self.suit}"
 
     def __repr__(self) -> str:
-        return f"Card('{self.rank}', '{self.suit}')"
+        return f"Card('{self.rank}{self.suit}')"
 
     def __abs__(self) -> int:
         return self.RANKS.index(self.rank)

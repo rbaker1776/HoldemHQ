@@ -7,68 +7,68 @@ from src.core.evaluator import evaluate_hand, get_hand_description
 
 
 ROYAL_FLUSH = [
-    Card("A", "s"),
-    Card("K", "s"),
-    Card("Q", "s"),
-    Card("J", "s"),
-    Card("T", "s"),
+    Card("As"),
+    Card("Ks"),
+    Card("Qs"),
+    Card("Js"),
+    Card("Ts"),
 ]
 STRAIGHT_FLUSH = [
-    Card("9", "h"),
-    Card("8", "h"),
-    Card("7", "h"),
-    Card("6", "h"),
-    Card("5", "h"),
+    Card("9h"),
+    Card("8h"),
+    Card("7h"),
+    Card("6h"),
+    Card("5h"),
 ]
 FOUR_KIND = [
-    Card("A", "s"),
-    Card("A", "h"),
-    Card("A", "d"),
-    Card("A", "c"),
-    Card("K", "s"),
+    Card("As"),
+    Card("Ah"),
+    Card("Ad"),
+    Card("Ac"),
+    Card("Ks"),
 ]
 FULL_HOUSE = [
-    Card("K", "s"),
-    Card("K", "h"),
-    Card("K", "d"),
-    Card("Q", "s"),
-    Card("Q", "h"),
+    Card("Ks"),
+    Card("Kh"),
+    Card("Kd"),
+    Card("Qs"),
+    Card("Qh"),
 ]
-FLUSH = [Card("A", "s"), Card("J", "s"), Card("9", "s"), Card("7", "s"), Card("5", "s")]
+FLUSH = [Card("As"), Card("Js"), Card("9s"), Card("7s"), Card("5s")]
 STRAIGHT = [
-    Card("A", "s"),
-    Card("K", "h"),
-    Card("Q", "d"),
-    Card("J", "c"),
-    Card("T", "s"),
+    Card("As"),
+    Card("Kh"),
+    Card("Qd"),
+    Card("Jc"),
+    Card("Ts"),
 ]
 THREE_KIND = [
-    Card("K", "s"),
-    Card("K", "h"),
-    Card("K", "d"),
-    Card("A", "s"),
-    Card("Q", "h"),
+    Card("Ks"),
+    Card("Kh"),
+    Card("Kd"),
+    Card("As"),
+    Card("Qh"),
 ]
 TWO_PAIR = [
-    Card("K", "s"),
-    Card("K", "h"),
-    Card("Q", "d"),
-    Card("Q", "s"),
-    Card("A", "h"),
+    Card("Ks"),
+    Card("Kh"),
+    Card("Qd"),
+    Card("Qs"),
+    Card("Ah"),
 ]
 ONE_PAIR = [
-    Card("K", "s"),
-    Card("K", "h"),
-    Card("A", "d"),
-    Card("Q", "s"),
-    Card("J", "h"),
+    Card("Ks"),
+    Card("Kh"),
+    Card("Ad"),
+    Card("Qs"),
+    Card("Jh"),
 ]
 HIGH_CARD = [
-    Card("A", "s"),
-    Card("K", "h"),
-    Card("Q", "d"),
-    Card("J", "s"),
-    Card("9", "h"),
+    Card("As"),
+    Card("Kh"),
+    Card("Qd"),
+    Card("Js"),
+    Card("9h"),
 ]
 
 
@@ -105,7 +105,7 @@ class TestEvaluateHandComprehensive:
         if invalid_size == 0:
             hand = []
         elif invalid_size == 1:
-            hand = [Card("A", "s")]
+            hand = [Card("As")]
         else:
             deck = Deck(shuffled=False)
             hand = deck.deal(invalid_size)
@@ -120,18 +120,18 @@ class TestEvaluateHandComprehensive:
         self, quad_rank: str, kicker1: str, kicker2: str
     ) -> None:
         hand1 = [
-            Card(quad_rank, "s"),
-            Card(quad_rank, "h"),
-            Card(quad_rank, "d"),
-            Card(quad_rank, "c"),
-            Card(kicker1, "s"),
+            Card(f"{quad_rank}s"),
+            Card(f"{quad_rank}h"),
+            Card(f"{quad_rank}d"),
+            Card(f"{quad_rank}c"),
+            Card(f"{kicker1}s"),
         ]
         hand2 = [
-            Card(quad_rank, "s"),
-            Card(quad_rank, "h"),
-            Card(quad_rank, "d"),
-            Card(quad_rank, "c"),
-            Card(kicker2, "s"),
+            Card(f"{quad_rank}s"),
+            Card(f"{quad_rank}h"),
+            Card(f"{quad_rank}d"),
+            Card(f"{quad_rank}c"),
+            Card(f"{kicker2}s"),
         ]
 
         score1 = evaluate_hand(hand1)
@@ -152,18 +152,18 @@ class TestEvaluateHandComprehensive:
     )
     def test_full_house_ranking(self, trips: str, pair1: str, pair2: str) -> None:
         hand1 = [
-            Card(trips, "s"),
-            Card(trips, "h"),
-            Card(trips, "d"),
-            Card(pair1, "s"),
-            Card(pair1, "h"),
+            Card(f"{trips}s"),
+            Card(f"{trips}h"),
+            Card(f"{trips}d"),
+            Card(f"{pair1}s"),
+            Card(f"{pair1}h"),
         ]
         hand2 = [
-            Card(trips, "s"),
-            Card(trips, "h"),
-            Card(trips, "d"),
-            Card(pair2, "s"),
-            Card(pair2, "h"),
+            Card(f"{trips}s"),
+            Card(f"{trips}h"),
+            Card(f"{trips}d"),
+            Card(f"{pair2}s"),
+            Card(f"{pair2}h"),
         ]
 
         score1 = evaluate_hand(hand1)
@@ -182,22 +182,22 @@ class TestEvaluateHandComprehensive:
     @pytest.mark.parametrize("suit", ["s", "h", "d", "c"])
     def test_flush_all_suits(self, suit: str) -> None:
         hand = [
-            Card("A", suit),
-            Card("K", suit),
-            Card("Q", suit),
-            Card("J", suit),
-            Card("9", suit),
+            Card(f"A{suit}"),
+            Card(f"K{suit}"),
+            Card(f"Q{suit}"),
+            Card(f"J{suit}"),
+            Card(f"9{suit}"),
         ]
         score = evaluate_hand(hand)
         description = get_hand_description(hand)
         assert "Flush" in description
 
         non_flush = [
-            Card("A", "s"),
-            Card("K", "h"),
-            Card("Q", "d"),
-            Card("J", "c"),
-            Card("9", "s"),
+            Card("As"),
+            Card("Kh"),
+            Card("Qd"),
+            Card("Jc"),
+            Card("9s"),
         ]
         non_flush_score = evaluate_hand(non_flush)
         assert score < non_flush_score
@@ -216,7 +216,7 @@ class TestEvaluateHandComprehensive:
 
         if len(straight_ranks) == 5:
             hand = [
-                Card(rank, ["s", "h", "d", "c"][i % 4])
+                Card(f"{rank}{['s', 'h', 'd', 'c'][i % 4]}")
                 for i, rank in enumerate(straight_ranks)
             ]
             score = evaluate_hand(hand)
@@ -225,43 +225,43 @@ class TestEvaluateHandComprehensive:
 
     def test_wheel_straight_edge_cases(self) -> None:
         wheel = [
-            Card("A", "s"),
-            Card("2", "h"),
-            Card("3", "d"),
-            Card("4", "c"),
-            Card("5", "s"),
+            Card("As"),
+            Card("2h"),
+            Card("3d"),
+            Card("4c"),
+            Card("5s"),
         ]
         wheel_score = evaluate_hand(wheel)
 
-        wheel_7 = wheel + [Card("K", "h"), Card("Q", "d")]
+        wheel_7 = wheel + [Card("Kh"), Card("Qd")]
         wheel_7_score = evaluate_hand(wheel_7)
 
         assert wheel_score == wheel_7_score
 
         six_high = [
-            Card("6", "s"),
-            Card("5", "h"),
-            Card("4", "d"),
-            Card("3", "c"),
-            Card("2", "s"),
+            Card("6s"),
+            Card("5h"),
+            Card("4d"),
+            Card("3c"),
+            Card("2s"),
         ]
         six_high_score = evaluate_hand(six_high)
         assert wheel_score > six_high_score
 
     def test_wheel_straight_flush(self) -> None:
         wheel_sf = [
-            Card("A", "s"),
-            Card("2", "s"),
-            Card("3", "s"),
-            Card("4", "s"),
-            Card("5", "s"),
+            Card("As"),
+            Card("2s"),
+            Card("3s"),
+            Card("4s"),
+            Card("5s"),
         ]
         regular_sf = [
-            Card("6", "h"),
-            Card("5", "h"),
-            Card("4", "h"),
-            Card("3", "h"),
-            Card("2", "h"),
+            Card("6h"),
+            Card("5h"),
+            Card("4h"),
+            Card("3h"),
+            Card("2h"),
         ]
 
         wheel_score = evaluate_hand(wheel_sf)
@@ -274,13 +274,13 @@ class TestEvaluateHandComprehensive:
 
     def test_multiple_pairs_edge_cases(self) -> None:
         hand = [
-            Card("A", "s"),
-            Card("A", "h"),
-            Card("K", "d"),
-            Card("K", "s"),
-            Card("Q", "c"),
-            Card("Q", "h"),
-            Card("J", "d"),
+            Card("As"),
+            Card("Ah"),
+            Card("Kd"),
+            Card("Ks"),
+            Card("Qc"),
+            Card("Qh"),
+            Card("Jd"),
         ]
 
         score = evaluate_hand(hand)
@@ -289,13 +289,13 @@ class TestEvaluateHandComprehensive:
 
     def test_full_house_vs_two_pair_in_seven_cards(self) -> None:
         hand = [
-            Card("A", "s"),
-            Card("A", "h"),
-            Card("A", "d"),
-            Card("K", "s"),
-            Card("K", "h"),
-            Card("Q", "c"),
-            Card("J", "d"),
+            Card("As"),
+            Card("Ah"),
+            Card("Ad"),
+            Card("Ks"),
+            Card("Kh"),
+            Card("Qc"),
+            Card("Jd"),
         ]
 
         score = evaluate_hand(hand)
@@ -304,18 +304,18 @@ class TestEvaluateHandComprehensive:
 
     def test_flush_vs_straight_priority(self) -> None:
         flush_hand = [
-            Card("A", "s"),
-            Card("J", "s"),
-            Card("9", "s"),
-            Card("7", "s"),
-            Card("5", "s"),
+            Card("As"),
+            Card("Js"),
+            Card("9s"),
+            Card("7s"),
+            Card("5s"),
         ]
         straight_hand = [
-            Card("A", "s"),
-            Card("K", "h"),
-            Card("Q", "d"),
-            Card("J", "c"),
-            Card("T", "s"),
+            Card("As"),
+            Card("Kh"),
+            Card("Qd"),
+            Card("Jc"),
+            Card("Ts"),
         ]
 
         flush_score = evaluate_hand(flush_hand)
@@ -343,7 +343,7 @@ class TestEvaluateHandComprehensive:
     )
     @settings(max_examples=100)
     def test_hypothesis_random_hands(self, card_tuples: list[tuple[str, str]]) -> None:
-        hand = [Card(rank, suit) for rank, suit in card_tuples]
+        hand = [Card(f"{rank}{suit}") for rank, suit in card_tuples]
         score = evaluate_hand(hand)
 
         assert isinstance(score, int)
@@ -355,11 +355,11 @@ class TestEvaluateHandComprehensive:
 
     def test_deterministic_evaluation(self) -> None:
         hand = [
-            Card("A", "s"),
-            Card("K", "h"),
-            Card("Q", "d"),
-            Card("J", "c"),
-            Card("T", "s"),
+            Card("As"),
+            Card("Kh"),
+            Card("Qd"),
+            Card("Jc"),
+            Card("Ts"),
         ]
 
         scores = [evaluate_hand(hand.copy()) for _ in range(100)]
@@ -367,11 +367,11 @@ class TestEvaluateHandComprehensive:
 
     def test_hand_order_independence(self) -> None:
         cards = [
-            Card("A", "s"),
-            Card("K", "h"),
-            Card("Q", "d"),
-            Card("J", "c"),
-            Card("T", "s"),
+            Card("As"),
+            Card("Kh"),
+            Card("Qd"),
+            Card("Jc"),
+            Card("Ts"),
         ]
 
         base_score = evaluate_hand(cards)
@@ -402,18 +402,18 @@ class TestEvaluateHandComprehensive:
     )
     def test_all_pair_rankings(self, rank1: str, rank2: str) -> None:
         pair1 = [
-            Card(rank1, "s"),
-            Card(rank1, "h"),
-            Card("K", "d"),
-            Card("Q", "c"),
-            Card("J", "s"),
+            Card(f"{rank1}s"),
+            Card(f"{rank1}h"),
+            Card("Kd"),
+            Card("Qc"),
+            Card("Js"),
         ]
         pair2 = [
-            Card(rank2, "s"),
-            Card(rank2, "h"),
-            Card("K", "d"),
-            Card("Q", "c"),
-            Card("J", "s"),
+            Card(f"{rank2}s"),
+            Card(f"{rank2}h"),
+            Card("Kd"),
+            Card("Qc"),
+            Card("Js"),
         ]
 
         for hand in [pair1, pair2]:
@@ -438,7 +438,7 @@ class TestEvaluateHandComprehensive:
                         if replacement != pair_rank and not any(
                             c.rank == replacement for c in hand
                         ):
-                            hand[i] = Card(replacement, hand[i].suit)
+                            hand[i] = Card(f"{replacement}{hand[i].suit}")
                             break
 
         score1 = evaluate_hand(pair1)
@@ -456,7 +456,7 @@ class TestEvaluateHandComprehensive:
         ranks = ["A", "K", "Q", "J", "9"]
 
         for suit in Card.SUITS:
-            flush_hand = [Card(rank, suit) for rank in ranks]
+            flush_hand = [Card(f"{rank}{suit}") for rank in ranks]
             score = evaluate_hand(flush_hand)
             description = get_hand_description(flush_hand)
             assert "Flush" in description
@@ -496,18 +496,18 @@ class TestEvaluateHandComprehensive:
 
     def test_identical_hands_different_suits(self) -> None:
         hand1 = [
-            Card("A", "s"),
-            Card("K", "s"),
-            Card("Q", "s"),
-            Card("J", "s"),
-            Card("T", "s"),
+            Card("As"),
+            Card("Ks"),
+            Card("Qs"),
+            Card("Js"),
+            Card("Ts"),
         ]
         hand2 = [
-            Card("A", "h"),
-            Card("K", "h"),
-            Card("Q", "h"),
-            Card("J", "h"),
-            Card("T", "h"),
+            Card("Ah"),
+            Card("Kh"),
+            Card("Qh"),
+            Card("Jh"),
+            Card("Th"),
         ]
         score1 = evaluate_hand(hand1)
         score2 = evaluate_hand(hand2)
@@ -515,20 +515,20 @@ class TestEvaluateHandComprehensive:
 
     def test_six_card_flush_uses_best_five(self) -> None:
         six_card_flush = [
-            Card("A", "s"),
-            Card("K", "s"),
-            Card("Q", "s"),
-            Card("J", "s"),
-            Card("T", "s"),
-            Card("2", "s"),
+            Card("As"),
+            Card("Ks"),
+            Card("Qs"),
+            Card("Js"),
+            Card("Ts"),
+            Card("2s"),
         ]
 
         five_card_flush = [
-            Card("A", "h"),
-            Card("K", "h"),
-            Card("Q", "h"),
-            Card("J", "h"),
-            Card("T", "h"),
+            Card("Ah"),
+            Card("Kh"),
+            Card("Qh"),
+            Card("Jh"),
+            Card("Th"),
         ]
 
         score_6 = evaluate_hand(six_card_flush)
@@ -538,32 +538,32 @@ class TestEvaluateHandComprehensive:
 
     def test_worst_case_performance_patterns(self) -> None:
         alternating = [
-            Card("A", "s"),
-            Card("2", "h"),
-            Card("K", "d"),
-            Card("3", "c"),
-            Card("Q", "s"),
+            Card("As"),
+            Card("2h"),
+            Card("Kd"),
+            Card("3c"),
+            Card("Qs"),
         ]
         score = evaluate_hand(alternating)
         assert isinstance(score, int)
 
         all_diff_suits = [
-            Card("A", "s"),
-            Card("K", "h"),
-            Card("Q", "d"),
-            Card("J", "c"),
-            Card("T", "s"),
+            Card("As"),
+            Card("Kh"),
+            Card("Qd"),
+            Card("Jc"),
+            Card("Ts"),
         ]
         score = evaluate_hand(all_diff_suits)
         assert isinstance(score, int)
 
     def test_card_comparison_integration(self) -> None:
         hand = [
-            Card("A", "s"),
-            Card("2", "h"),
-            Card("3", "d"),
-            Card("4", "c"),
-            Card("5", "s"),
+            Card("As"),
+            Card("2h"),
+            Card("3d"),
+            Card("4c"),
+            Card("5s"),
         ]
 
         score = evaluate_hand(hand)
@@ -572,24 +572,36 @@ class TestEvaluateHandComprehensive:
 
     def test_card_equality_edge_cases(self) -> None:
         hand1 = [
-            Card("A", "s"),
-            Card("A", "h"),
-            Card("K", "d"),
-            Card("Q", "c"),
-            Card("J", "s"),
+            Card("As"),
+            Card("Ah"),
+            Card("Kd"),
+            Card("Qc"),
+            Card("Js"),
         ]
         hand2 = [
-            Card("A", "d"),
-            Card("A", "c"),
-            Card("K", "s"),
-            Card("Q", "h"),
-            Card("J", "d"),
+            Card("Ad"),
+            Card("Ac"),
+            Card("Ks"),
+            Card("Qh"),
+            Card("Jd"),
         ]
 
         score1 = evaluate_hand(hand1)
         score2 = evaluate_hand(hand2)
 
         assert score1 == score2
+
+    def test_new_card_format_compatibility(self) -> None:
+        # Test that new format works properly
+        old_style = [Card("A", "s"), Card("K", "h")]  # Still works
+        new_style = [Card("As"), Card("Kh")]  # New format
+
+        old_score = evaluate_hand(old_style)
+        new_score = evaluate_hand(new_style)
+
+        assert old_score == new_score
+        assert str(old_style[0]) == str(new_style[0])
+        assert str(old_style[1]) == str(new_style[1])
 
 
 if __name__ == "__main__":

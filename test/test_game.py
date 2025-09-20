@@ -45,7 +45,7 @@ class TestGame:
         players = self.create_players(3)
         game = Game(players, 5, 10)
 
-        game.board = [Card("A", "s")]
+        game.board = [Card("As")]
         game.phase = GamePhase.FLOP
         game.pot = 100
 
@@ -113,7 +113,7 @@ class TestGame:
         players = self.create_players(3)
         game = Game(players, 5, 10)
         game.phase = GamePhase.FLOP
-        game.board = [Card("A", "s"), Card("K", "h"), Card("Q", "d")]
+        game.board = [Card("As"), Card("Kh"), Card("Qd")]
 
         game.advance_phase()
 
@@ -124,7 +124,7 @@ class TestGame:
         players = self.create_players(3)
         game = Game(players, 5, 10)
         game.phase = GamePhase.TURN
-        game.board = [Card("A", "s"), Card("K", "h"), Card("Q", "d"), Card("J", "c")]
+        game.board = [Card("As"), Card("Kh"), Card("Qd"), Card("Jc")]
 
         game.advance_phase()
 
@@ -322,15 +322,15 @@ class TestGame:
         players = self.create_players(2)
         game = Game(players, 5, 10)
 
-        players[0].deal_hole_cards([Card("A", "s"), Card("A", "h")])
-        players[1].deal_hole_cards([Card("K", "s"), Card("K", "h")])
+        players[0].deal_hole_cards([Card("As"), Card("Ah")])
+        players[1].deal_hole_cards([Card("Ks"), Card("Kh")])
 
         game.board = [
-            Card("A", "d"),
-            Card("K", "d"),
-            Card("Q", "c"),
-            Card("J", "s"),
-            Card("9", "h"),
+            Card("Ad"),
+            Card("Kd"),
+            Card("Qc"),
+            Card("Js"),
+            Card("9h"),
         ]
 
         results = game.evaluate_hands()
@@ -345,15 +345,15 @@ class TestGame:
         players = self.create_players(2)
         game = Game(players, 5, 10)
 
-        players[0].deal_hole_cards([Card("A", "s"), Card("A", "h")])
-        players[1].deal_hole_cards([Card("K", "s"), Card("K", "h")])
+        players[0].deal_hole_cards([Card("As"), Card("Ah")])
+        players[1].deal_hole_cards([Card("Ks"), Card("Kh")])
 
         game.board = [
-            Card("7", "d"),
-            Card("J", "d"),
-            Card("T", "c"),
-            Card("9", "s"),
-            Card("8", "h"),
+            Card("7d"),
+            Card("Jd"),
+            Card("Tc"),
+            Card("9s"),
+            Card("8h"),
         ]
 
         winners = game.determine_winner()
